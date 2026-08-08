@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#121417" />
+  <title>Drum Designer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <button class="icon-button mobile-only" id="libraryToggle" aria-label="Toggle component library">☰</button>
+        <div class="brand-mark">DD</div>
+        <div>
+          <div class="brand-name">Drum Designer</div>
+          <input id="projectName" class="project-name" value="My Drum Setup" aria-label="Project name" />
+        </div>
+      </div>
+
+      <div class="toolbar" role="toolbar" aria-label="Project controls">
+        <button class="tool-button" id="newProjectBtn">New</button>
+        <button class="tool-button" id="demoBtn">Demo Kit</button>
+        <button class="tool-button" id="saveBtn">Save</button>
+        <button class="tool-button" id="loadBtn">Load</button>
+        <span class="toolbar-divider"></span>
+        <button class="icon-button" id="undoBtn" title="Undo (Ctrl/Cmd+Z)">↶</button>
+        <button class="icon-button" id="redoBtn" title="Redo (Ctrl/Cmd+Shift+Z)">↷</button>
+        <span class="toolbar-divider"></span>
+        <button class="icon-button" id="zoomOutBtn" title="Zoom out">−</button>
+        <button class="zoom-readout" id="zoomReadout">100%</button>
+        <button class="icon-button" id="zoomInBtn" title="Zoom in">+</button>
+        <button class="tool-button" id="fitBtn">Fit</button>
+        <span class="toolbar-divider"></span>
+        <button class="tool-button" id="cleanViewBtn">Clean View</button>
+        <button class="tool-button primary" id="exportBtn">Export PNG</button>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <aside class="library-panel" id="libraryPanel">
+        <div class="panel-heading">
+          <div>
+            <h2>Components</h2>
+            <p>Drag equipment onto the stage</p>
+          </div>
+          <button class="icon-button mobile-only" id="libraryClose" aria-label="Close component library">×</button>
+        </div>
+
+        <div class="library-search-wrap">
+          <input id="librarySearch" class="library-search" type="search" placeholder="Search equipment…" />
+        </div>
+
+        <div id="libraryContent" class="library-content"></div>
+      </aside>
+
+      <section class="workspace-wrap">
+        <div class="workspace-status">
+          <div class="mode-pill">DESIGN</div>
+          <div id="selectionReadout">Nothing selected</div>
+          <div class="status-spacer"></div>
+          <label class="grid-toggle"><input id="gridToggle" type="checkbox" /> Grid</label>
+          <span id="objectCount">0 items</span>
+        </div>
+
+        <div id="workspaceViewport" class="workspace-viewport" tabindex="0" aria-label="Drum layout workspace">
+          <svg id="workspaceSvg" class="workspace-svg" xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+            <defs>
+              <radialGradient id="cymbalGradient" cx="42%" cy="36%" r="70%">
+                <stop offset="0" stop-color="#fff3b8" />
+                <stop offset="0.42" stop-color="#e5b94f" />
+                <stop offset="0.78" stop-color="#b78128" />
+                <stop offset="1" stop-color="#74501d" />
+              </radialGradient>
+              <radialGradient id="drumGradient" cx="45%" cy="38%" r="66%">
+                <stop offset="0" stop-color="#f9fbfd" />
+                <stop offset="0.7" stop-color="#d4dce2" />
+                <stop offset="1" stop-color="#8d969d" />
+              </radialGradient>
+              <linearGradient id="hardwareGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#e8edf0" />
+                <stop offset="0.45" stop-color="#89939a" />
+                <stop offset="1" stop-color="#434a50" />
+              </linearGradient>
+              <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.32" />
+              </filter>
+              <pattern id="gridPattern" width="25" height="25" patternUnits="userSpaceOnUse">
+                <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#2d343a" stroke-width="1" />
+              </pattern>
+            </defs>
+            <rect id="stageBackground" x="0" y="0" width="1400" height="900" rx="18" fill="#1a1e22" stroke="#3a4249" stroke-width="2" />
+            <rect id="gridLayer" x="0" y="0" width="1400" height="900" rx="18" fill="url(#gridPattern)" opacity="0" pointer-events="none" />
+            <g id="stageGuides" pointer-events="none">
+              <line x1="700" y1="40" x2="700" y2="860" stroke="#343b41" stroke-width="2" stroke-dasharray="12 14" />
+              <text x="700" y="875" text-anchor="middle" fill="#59636b" font-size="16" font-family="Inter, Arial, sans-serif">FRONT OF STAGE</text>
+            </g>
+            <g id="objectLayer"></g>
+          </svg>
+        </div>
+
+        <div class="floating-tools" id="floatingTools" hidden>
+          <button id="duplicateBtn" title="Duplicate">Duplicate</button>
+          <button id="rotateLeftBtn" title="Rotate left">−15°</button>
+          <button id="rotateRightBtn" title="Rotate right">+15°</button>
+          <button id="backBtn" title="Send backward">Back</button>
+          <button id="frontBtn" title="Bring forward">Front</button>
+          <button id="propertiesBtn" title="Properties">Properties</button>
+          <button id="deleteBtn" class="danger" title="Delete">Delete</button>
+        </div>
+      </section>
+
+      <aside class="properties-panel" id="propertiesPanel" aria-hidden="true">
+        <div class="panel-heading">
+          <div>
+            <h2>Properties</h2>
+            <p>Edit the selected component</p>
+          </div>
+          <button class="icon-button" id="propertiesClose" aria-label="Close properties">×</button>
+        </div>
+        <div id="propertiesContent" class="properties-content"></div>
+      </aside>
+    </main>
+
+    <footer class="footerbar">
+      <span>Tip: drag equipment, mouse wheel to zoom, Space + drag to pan.</span>
+      <span>Ctrl/Cmd+Z undo · Delete remove · Ctrl/Cmd+D duplicate</span>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
