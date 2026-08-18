@@ -1,12 +1,14 @@
-# Drum Designer
+# Drumit
 
-A browser-based top-down drum kit and stage layout designer.
+Drumit is a browser-based drum kit, stage-layout and drum-fill writing tool.
 
-The first working version is intentionally dependency-free: plain HTML, CSS and JavaScript, so it can run directly from GitHub Pages without a build process.
+It is intentionally dependency-free: plain HTML, CSS and JavaScript, so it can run directly from GitHub Pages without a build process.
 
 ## Current features
 
-- Top-down 1400×900 stage workspace
+### Kit & Stage Designer
+
+- Top-down stage workspace
 - Drums, cymbals, electronic gear, hardware, stage equipment and accessories
 - Drag equipment from the component library onto the stage
 - Free movement and overlapping/layering
@@ -19,7 +21,28 @@ The first working version is intentionally dependency-free: plain HTML, CSS and 
 - Browser-local project save/load
 - Built-in hybrid rock demo kit
 - High-resolution PNG export
-- Desktop-first interface with basic tablet/mobile adaptation
+- Desktop, tablet and mobile adaptation
+
+### Fill Composer
+
+Open `composer.html`, or press **Fill Composer** from the main Drumit toolbar.
+
+- Drum step sequencer for hi-hat, crash, ride, toms, snare and kick
+- 1–4 bar fills
+- 2/4, 3/4, 4/4, 5/4, 6/8, 7/8 and 12/8 time signatures
+- 1/8, 1/16, 1/32 and triplet grids
+- Normal, accent and ghost-note hit states
+- R / L / K / B sticking with automatic alternating sticking
+- Automatic notation preview above the sequencer
+- Moving playback cursor
+- Browser-generated drum preview sounds using Web Audio
+- Loop playback
+- Tap Kit entry pads with optional auto-advance
+- Undo / redo
+- Browser-local fill library
+- JSON fill export and import
+- Built-in demo fill
+- Horizontally scrollable mobile-friendly sequencer
 
 ## Run locally
 
@@ -41,11 +64,15 @@ Then open `http://localhost:8080`.
 4. Select branch **main** and folder **/(root)**.
 5. Save.
 
-GitHub will publish the app at:
+GitHub Pages address:
 
-`https://sumkindafreak.github.io/randoms/`
+`https://sumkindafreak.github.io/drumit/`
 
-## Controls
+Fill Composer:
+
+`https://sumkindafreak.github.io/drumit/composer.html`
+
+## Designer controls
 
 - Drag library item: place equipment
 - Drag stage item: move it
@@ -60,6 +87,17 @@ GitHub will publish the app at:
 - Shift + Arrow: larger nudge
 - R: rotate 15°
 
+## Fill Composer controls
+
+- Click a grid cell: Normal → Accent → Ghost → Off
+- Shift + click a written hit: change sticking
+- Right-click a written hit: remove it
+- Tap Kit pad: write the current step
+- Space: play / pause
+- Ctrl/Cmd + Z: undo
+- Ctrl/Cmd + Shift + Z: redo
+- Left / Right Arrow: move the entry cursor
+
 ## Next development targets
 
-The current version establishes the editor and visual language. Natural next additions are multi-selection and grouping, cable/audio/MIDI routing, real-world stage measurements, reusable equipment inventory, input lists, PDF stage-rider export and multiple saved projects.
+The Fill Composer is the start of Drumit's music-writing side. Planned improvements include tighter engraving-quality drum notation, flams, drags, rimshots, open/closed hi-hats, cymbal chokes, velocity editing, reusable fill tags, song arrangement, MIDI input/output, and direct interaction with the user's designed Drumit kit.
