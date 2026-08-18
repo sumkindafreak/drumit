@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d0f11" />
+  <title>Drumit — Fill Composer</title>
+  <link rel="stylesheet" href="composer.css" />
+</head>
+<body>
+  <div class="composer-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <button class="icon-button" id="backToDesignerBtn" title="Back to kit designer" aria-label="Back to kit designer">←</button>
+        <div class="brand-mark">D</div>
+        <div class="brand-copy">
+          <div class="brand-name">Drumit</div>
+          <div class="brand-subtitle">Fill Composer</div>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="tool-button" id="demoBtn">Demo Fill</button>
+        <button class="tool-button" id="clearBtn">Clear</button>
+        <button class="tool-button" id="saveBtn">Save</button>
+        <button class="tool-button" id="loadBtn">Load</button>
+        <button class="tool-button" id="importBtn">Import</button>
+        <button class="tool-button primary" id="exportBtn">Export JSON</button>
+        <input id="importInput" type="file" accept="application/json,.json" hidden />
+      </div>
+    </header>
+
+    <section class="control-strip" aria-label="Fill settings">
+      <label class="field field-name">
+        <span>Fill name</span>
+        <input id="fillName" type="text" value="Untitled Fill" maxlength="80" />
+      </label>
+
+      <label class="field compact-field">
+        <span>BPM</span>
+        <input id="bpmInput" type="number" min="30" max="260" value="120" inputmode="numeric" />
+      </label>
+
+      <label class="field compact-field">
+        <span>Time</span>
+        <select id="timeSignature">
+          <option value="2/4">2/4</option>
+          <option value="3/4">3/4</option>
+          <option value="4/4" selected>4/4</option>
+          <option value="5/4">5/4</option>
+          <option value="6/8">6/8</option>
+          <option value="7/8">7/8</option>
+          <option value="12/8">12/8</option>
+        </select>
+      </label>
+
+      <label class="field compact-field">
+        <span>Bars</span>
+        <select id="barsSelect">
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
+
+      <label class="field compact-field">
+        <span>Grid</span>
+        <select id="subdivisionSelect">
+          <option value="8">1/8</option>
+          <option value="16" selected>1/16</option>
+          <option value="32">1/32</option>
+          <option value="12">Triplet</option>
+        </select>
+      </label>
+
+      <div class="stick-control" aria-label="Sticking entry mode">
+        <span>Sticking</span>
+        <div class="segmented" id="stickMode">
+          <button class="segment active" data-stick="AUTO">Auto</button>
+          <button class="segment" data-stick="R">R</button>
+          <button class="segment" data-stick="L">L</button>
+          <button class="segment" data-stick="K">K</button>
+          <button class="segment" data-stick="B">B</button>
+        </div>
+      </div>
+    </section>
+
+    <main class="composer-main">
+      <section class="notation-panel panel">
+        <div class="panel-header">
+          <div>
+            <h1>Notation Preview</h1>
+            <p>Written automatically from the grid below</p>
+          </div>
+          <div class="legend-inline" aria-label="Hit legend">
+            <span><i class="legend-dot normal"></i>Normal</span>
+            <span><i class="legend-dot accent"></i>Accent</span>
+            <span><i class="legend-dot ghost"></i>Ghost</span>
+          </div>
+        </div>
+        <div class="notation-scroll" id="notationScroll">
+          <svg id="notationSvg" class="notation-svg" role="img" aria-label="Drum notation preview"></svg>
+        </div>
+      </section>
+
+      <section class="grid-panel panel">
+        <div class="panel-header grid-panel-header">
+          <div>
+            <h2>Fill Grid</h2>
+            <p>Tap a cell to cycle Normal → Accent → Ghost → Off</p>
+          </div>
+          <div class="grid-tools">
+            <button class="small-button" id="undoBtn" title="Undo">↶ Undo</button>
+            <button class="small-button" id="redoBtn" title="Redo">↷ Redo</button>
+            <label class="auto-advance"><input id="autoAdvance" type="checkbox" checked /> Auto advance pads</label>
+          </div>
+        </div>
+
+        <div class="sequencer-shell">
+          <div class="instrument-labels" id="instrumentLabels" aria-hidden="true"></div>
+          <div class="sequencer-scroll" id="sequencerScroll">
+            <div id="beatHeader" class="beat-header"></div>
+            <div id="sequencerGrid" class="sequencer-grid" role="grid" aria-label="Drum fill step sequencer"></div>
+            <div id="stickingRow" class="sticking-row" aria-label="Sticking row"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bottom-row">
+        <div class="transport-panel panel">
+          <div class="transport">
+            <button class="transport-button" id="rewindBtn" title="Return to start" aria-label="Return to start">|◀</button>
+            <button class="transport-button play" id="playBtn" title="Play" aria-label="Play">▶</button>
+            <button class="transport-button" id="stopBtn" title="Stop" aria-label="Stop">■</button>
+            <label class="loop-control"><input id="loopToggle" type="checkbox" checked /> Loop</label>
+            <div class="transport-status">
+              <span id="positionReadout">Bar 1 · Beat 1 · Step 1</span>
+              <span id="durationReadout">0.0 sec</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pad-panel panel">
+          <div class="panel-header compact-header">
+            <div>
+              <h2>Tap Kit</h2>
+              <p>Write the selected step by tapping a drum</p>
+            </div>
+          </div>
+          <div id="padRack" class="pad-rack"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footerbar">
+      <span>Click cells to write · Shift+click cycles sticking · right-click removes</span>
+      <span>Space play/stop · Ctrl/Cmd+Z undo · Ctrl/Cmd+Shift+Z redo</span>
+    </footer>
+  </div>
+
+  <dialog id="loadDialog" class="load-dialog">
+    <form method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <h2>Saved Fills</h2>
+          <p>Stored locally on this device</p>
+        </div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </div>
+      <div id="savedFillList" class="saved-fill-list"></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="composer.js"></script>
+</body>
+</html>
